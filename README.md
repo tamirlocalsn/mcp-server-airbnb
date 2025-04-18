@@ -1,4 +1,5 @@
 # Airbnb MCP Server
+
 [![smithery badge](https://smithery.ai/badge/@openbnb-org/mcp-server-airbnb)](https://smithery.ai/server/@openbnb-org/mcp-server-airbnb)
 
 MCP Server for searching Airbnb and get listing details.
@@ -6,6 +7,7 @@ MCP Server for searching Airbnb and get listing details.
 ## Tools
 
 1. `airbnb_search`
+
    - Search for Airbnb listings
    - Required Input: `location` (string)
    - Optional Inputs:
@@ -23,6 +25,7 @@ MCP Server for searching Airbnb and get listing details.
    - Returns: Array of listings with details like name, price, location, etc.
 
 2. `airbnb_listing_details`
+
    - Get detailed information about a specific Airbnb listing
    - Required Input: `id` (string)
    - Optional Inputs:
@@ -32,6 +35,13 @@ MCP Server for searching Airbnb and get listing details.
      - `children` (number)
      - `infants` (number)
      - `pets` (number)
+     - `ignoreRobotsText` (boolean)
+   - Returns: Detailed listing information including description, host details, amenities, pricing, etc.
+
+3. `airbnb_url_details`
+   - Get detailed information about a specific Airbnb listing using its URL
+   - Required Input: `url` (string)
+   - Optional Inputs:
      - `ignoreRobotsText` (boolean)
    - Returns: Detailed listing information including description, host details, amenities, pricing, etc.
 
@@ -45,9 +55,10 @@ MCP Server for searching Airbnb and get listing details.
 
 ## Setup
 
-
 ### Installing on Claude Desktop
+
 Before starting make sure [Node.js](https://nodejs.org/) is installed on your desktop for `npx` to work.
+
 1. Go to: Settings > Developer > Edit Config
 
 2. Add the following to your `claude_desktop_config.json`:
@@ -57,10 +68,7 @@ Before starting make sure [Node.js](https://nodejs.org/) is installed on your de
   "mcpServers": {
     "airbnb": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@openbnb/mcp-server-airbnb"
-      ]
+      "args": ["-y", "@openbnb/mcp-server-airbnb"]
     }
   }
 }
@@ -73,15 +81,12 @@ To ignore robots.txt for all requests, use this version with `--ignore-robots-tx
   "mcpServers": {
     "airbnb": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@openbnb/mcp-server-airbnb",
-        "--ignore-robots-txt"
-      ]
+      "args": ["-y", "@openbnb/mcp-server-airbnb", "--ignore-robots-txt"]
     }
   }
 }
 ```
+
 3. Restart Claude Desktop and plan your next trip that include Airbnbs!
 
 ### Other Option: Installing via Smithery
