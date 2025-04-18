@@ -117,9 +117,29 @@ const AIRBNB_LISTING_DETAILS_TOOL: Tool = {
   }
 };
 
+const AIRBNB_URL_DETAILS_TOOL: Tool = {
+  name: "airbnb_url_details",
+  description: "Get detailed information about a specific Airbnb listing using its URL. Provide direct links to the user",
+  inputSchema: {
+    type: "object",
+    properties: {
+      url: {
+        type: "string",
+        description: "The full Airbnb listing URL"
+      },
+      ignoreRobotsText: {
+        type: "boolean",
+        description: "Ignore robots.txt rules for this request"
+      }
+    },
+    required: ["url"]
+  }
+};
+
 const AIRBNB_TOOLS = [
   AIRBNB_SEARCH_TOOL,
   AIRBNB_LISTING_DETAILS_TOOL,
+  AIRBNB_URL_DETAILS_TOOL,
 ] as const;
 
 // Utility functions
@@ -466,6 +486,33 @@ async function handleAirbnbListingDetails(params: any) {
   }
 }
 
+async function handleAirbnbUrlDetails(params: any) {
+  const { url, ignoreRobotsText = false } = params;
+  
+  try {
+    // Extract the ID from the URL using regex
+    const idMatch = url.match(/\/rooms\/(\d+)/);
+    if (!idMatch) {
+      throw new Error("Could not extract Airbnb listing ID from URL");
+    }
+    
+    const id = idMatch[1];
+    // Use the existing listing details handler
+    return await handleAirbnbListingDetails({ id, ignoreRobotsText });
+  } catch (error) {
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+          url: url
+        }, null, 2)
+      }],
+      isError: true
+    };
+  }
+}
+
 // Server setup
 const server = new Server(
   {
@@ -502,6 +549,10 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       case "airbnb_listing_details": {
         return await handleAirbnbListingDetails(request.params.arguments);
+      }
+
+      case "airbnb_url_details": {
+        return await handleAirbnbUrlDetails(request.params.arguments);
       }
 
       default:
